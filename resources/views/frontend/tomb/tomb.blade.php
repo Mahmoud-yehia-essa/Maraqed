@@ -56,12 +56,14 @@
             $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate)->format('Y-m-d');
             $fields = [
                 'الاسم' => $tomb->Name,
-                'تاريخ الوفاة' => $formattedDate,
                 'العمر' => $tomb->BirtDate,
-                'عمودي' => $tomb->Vertical,
-                'أفقي' => $tomb->Horizontal,
-                'رقم القبر' => $tomb->TombNumber,
+                'تاريخ الوفاة' => $formattedDate,
                 'مكان الدفن' => $tomb->TombPlace,
+                'القطعة' => $tomb->BlockNumber,
+
+                'اللاين' => $tomb->Vertical,
+                // 'أفقي' => $tomb->Horizontal,
+                'رقم القبر' => $tomb->TombNumber,
                 // 'خط العرض (Latitude)' => $tomb->Latitude,
                 // 'خط الطول (Longitude)' => $tomb->Longitude,
             ];
