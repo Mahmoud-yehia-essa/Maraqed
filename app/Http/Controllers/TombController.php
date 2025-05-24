@@ -114,8 +114,15 @@ class TombController extends Controller
 
             'BirtDate' => $request->BirtDate,
             'Vertical' => $request->Vertical,
+                        'BlockNumber' => $request->BlockNumber,
+
+
             'Horizontal' => $request->Horizontal,
             'TombNumber' => $request->TombNumber,
+
+            'TombPlace' => $request->TombPlace,
+
+
             'Latitude' => $request->Latitude,
             'Longitude' => $request->Longitude,
             'Photo2' =>  $filenamePhoto2,
@@ -282,6 +289,9 @@ class TombController extends Controller
         $tomb->BirtDate = $request->BirtDate;
         $tomb->Vertical = $request->Vertical;
         $tomb->Horizontal = $request->Horizontal;
+                $tomb->BlockNumber = $request->BlockNumber;
+
+
         $tomb->TombNumber = $request->TombNumber;
         $tomb->TombPlace = $request->TombPlace;
         $tomb->Latitude = $request->Latitude;

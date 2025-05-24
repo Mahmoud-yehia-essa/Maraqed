@@ -26,6 +26,20 @@
                                 </div>
                             </div>
 
+                                  <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">العمر</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input name="BirtDate" type="number" class="form-control" value="{{ old('BirtDate') }}" />
+                                    @error('BirtDate') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+
+
+
+
                             <!-- Last Name -->
                             <div class="row mb-3">
                                 <div class="col-sm-3">
@@ -37,21 +51,32 @@
                                 </div>
                             </div>
 
-
-                            <div class="row mb-3">
+          <div class="row mb-3">
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">العمر</h6>
+                                    <h6 class="mb-0">مكان الدفن</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <input name="BirtDate" type="number" class="form-control" value="{{ old('BirtDate') }}" />
-                                    @error('BirtDate') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <input name="TombPlace" type="text" class="form-control" value="{{ old('TombPlace') }}" />
+                                    @error('TombPlace') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+
+
+                             <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">القطعة</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input name="BlockNumber" type="number" class="form-control" value="{{ old('BlockNumber') }}" />
+                                    @error('BlockNumber') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
 
                             <div class="row mb-3">
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">عمودي</h6>
+                                    <h6 class="mb-0">لاين</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
                                     <input name="Vertical" type="number" class="form-control" value="{{ old('Vertical') }}" />
@@ -60,7 +85,7 @@
                             </div>
 
 
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">أفقي</h6>
                                 </div>
@@ -68,7 +93,7 @@
                                     <input name="Horizontal" type="number" class="form-control" value="{{ old('Horizontal') }}" />
                                     @error('Horizontal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
 
 
@@ -86,17 +111,6 @@
 
 
 
-
-
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">مكان الدفن</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input name="TombPlace" type="text" class="form-control" value="{{ old('TombPlace') }}" />
-                                    @error('TombPlace') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                            </div>
 
 
                             <div class="row mb-3">
