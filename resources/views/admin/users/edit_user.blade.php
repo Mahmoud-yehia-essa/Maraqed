@@ -78,7 +78,18 @@
 
 
 
+ <!-- Password -->
+                             <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">كلمة المرور</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input autocomplete="new-password" name="password" type="password" class="form-control" />
+                                    <small>اترك كلمة المرور فارغا اذا كان عضو عادي</small>
 
+                                    @error('password') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
 
 
 

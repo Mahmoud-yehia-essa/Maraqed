@@ -40,10 +40,15 @@ class UserController extends Controller
     {
 
 
+
         $user_id = $request->id;
         $old_Photo = $request->old_Photo;
 
         $user = User::findOrFail($user_id);
+
+
+
+
 
         $request->validate([
             'Name' => 'required|string',
@@ -109,6 +114,14 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->Tel2 = $request->Tel2;
         $user->role = $request->role;
+
+        if($request->password != "")
+        {
+            $password = Hash::make($request->password);
+        $user->password = $password;
+
+
+        }
 
 
 
