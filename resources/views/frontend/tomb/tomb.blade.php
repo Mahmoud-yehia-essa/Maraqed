@@ -61,7 +61,7 @@
                 'مكان الدفن' => $tomb->TombPlace,
                 'القطعة' => $tomb->BlockNumber,
 
-                'اللاين' => $tomb->Vertical,
+                'لاين' => $tomb->Vertical,
                 // 'أفقي' => $tomb->Horizontal,
                 'رقم القبر' => $tomb->TombNumber,
                 // 'خط العرض (Latitude)' => $tomb->Latitude,
