@@ -44,7 +44,9 @@
                             <div class="row mb-3">
                                 <div  style="cursor: pointer;"  onclick="showQrModal(this.innerHTML, 'qr_{{ $tomb->id }}')" class="col-sm-12 text-center">
 
-                                {!! QrCode::size(100)->generate($tomb->id) !!}
+
+
+                                {!! QrCode::size(100)->generate("https://maraqed.com/admin/public/tomb/"+$tomb->id) !!}
                             </div>
                         </div>
                             <!-- First Name -->
@@ -171,7 +173,7 @@
                             <!-- Profile Picture -->
                             <div class="row mb-3">
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">الصورة</h6>
+                                    <h6 class="mb-0">الصورة الشخصية</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
                                     <input name="Photo2" type="file" id="image" class="form-control" />
@@ -199,7 +201,7 @@
                                 <!-- Profile Picture -->
                                 <div class="row mb-3">
                                     <div class="col-sm-3">
-                                        <h6 class="mb-0">شهادة الوفاة</h6>
+                                        <h6 class="mb-0">صورة الشاهد</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         <input name="DeathPhoto" type="file" id="DeathPhoto" class="form-control" />
