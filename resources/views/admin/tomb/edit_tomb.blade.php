@@ -46,7 +46,9 @@
 
 
 
-                                {!! QrCode::size(100)->generate("https://maraqed.com/admin/public/tomb/"+$tomb->id) !!}
+                                {{-- {!! QrCode::size(100)->generate("https://maraqed.com/admin/public/tomb/"+$tomb->id) !!} --}}
+                                {!! QrCode::size(100)->generate("https://maraqed.com/admin/public/tomb/" . $tomb->id) !!}
+
                             </div>
                         </div>
                             <!-- First Name -->
