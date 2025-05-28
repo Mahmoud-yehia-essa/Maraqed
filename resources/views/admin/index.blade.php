@@ -92,7 +92,7 @@
                         <div class="progress-bar bg-white" role="progressbar" style="width: 100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div class="d-flex align-items-center text-white">
-                        <p class="mb-0">عدد المقابر</p>
+                        <p class="mb-0">عدد القبور</p>
                     </div>
                 </div>
             </div>

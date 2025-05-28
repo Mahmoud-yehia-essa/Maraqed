@@ -38,6 +38,8 @@
 <th>العمر</th>
 {{-- <th>الوصول السريع</th> --}}
 <th>تاريخ الوفاة</th>
+    <th>مكان الدفن</th>
+                <th>القطعة</th>
 
 <th> صورة الشاهد</th>
 <th> صورة المرحوم</th>
@@ -53,6 +55,9 @@
 <td> {{ $key+1 }} </td>
 <td>{{ $item->Name }}</td>
 <td>{{ $item->BirtDate }}</td>
+
+
+
 {{-- <td>
     <div onclick="showQrModal(this.innerHTML)" style="cursor: pointer;">
         {!! QrCode::size(60)->generate($item->id) !!}
@@ -65,6 +70,9 @@
 </td> --}}
 <td>{{ $item->DeathDate ? $item->DeathDate : 'لم يتم التحديد' }}</td>
 
+<td>{{ $item->TombPlace }}</td>
+
+<td>{{ $item->BlockNumber }}</td>
 
 
 <td>
@@ -109,6 +117,11 @@
     <th>العمر</th>
     {{-- <th>الوصول السريع</th> --}}
     <th>تاريخ الوفاة</th>
+
+        <th>مكان الدفن</th>
+                <th>القطعة</th>
+
+
 
 <th> صورة الشاهد</th>
     <th> صورة المرحوم</th>

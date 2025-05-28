@@ -4,7 +4,7 @@
 
 <!--breadcrumb-->
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">اضافة مقبرة جديد</div>
+    <div class="breadcrumb-title pe-3">اضافة قبر جديد</div>
 </div>
 <!--end breadcrumb-->
 <div class="container">

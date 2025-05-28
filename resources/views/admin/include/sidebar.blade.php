@@ -58,7 +58,7 @@
             <ul>
                 <li> <a href="{{route('all.tomb')}}"><i class='bx bx-radio-circle'></i>عرض المقابر</a>
                 </li>
-                <li> <a href="{{route('add.tomb')}}"><i class='bx bx-radio-circle'></i>إضافة مقبرة</a>
+                <li> <a href="{{route('add.tomb')}}"><i class='bx bx-radio-circle'></i>إضافة قبر</a>
                 </li>
 
 

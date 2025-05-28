@@ -12,12 +12,37 @@ class TombController extends Controller
 {
     //
 
-    public function allTomb()
-    {
-        $tombs = Tomb::latest()->get();
+    // public function allTomb()
+    // {
+    //     $tombs = Tomb::latest()->get();
 
-        return view('admin.tomb.all_tomb',compact('tombs'));
-    }
+    //     return view('admin.tomb.all_tomb',compact('tombs'));
+    // }
+
+  public function allTomb()
+{
+    $tombs = Tomb::all()->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            // Normalize different date formats to Carbon
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                // Format: d/m/Y (e.g., 29/4/2021)
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                // Format: Y-m-d (e.g., 2025-05-20)
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {
+            // If the format is incorrect or parsing fails
+        }
+
+        return 0; // If unrecognized or invalid, push to end
+    })->values(); // Reindex collection
+
+    return view('admin.tomb.all_tomb', compact('tombs'));
+}
+
 
     public function addTomb()
     {
@@ -388,30 +413,11 @@ class TombController extends Controller
 
     /// API
 
+
+    /*
     public function searchTombApi(Request $request)
     {
-        // $keyWord = $request->keyWord;
 
-        // // Use 'LIKE' for partial matching
-        // $getSearchResult = Tomb::where('Name', 'LIKE', '%' . $keyWord . '%')->get();
-
-        // // Return the result as JSON
-        // return response()->json($getSearchResult);
-
-
-
-
-
-        // $keyWord = $request->keyWord;
-
-        // $results = Tomb::where('Name', 'LIKE', '%' . $keyWord . '%')
-        //     ->orderByRaw("CASE
-        //                     WHEN LOWER(SUBSTRING_INDEX(Name, ' ', 1)) = ? THEN 0
-        //                     ELSE 1
-        //                  END", [strtolower($keyWord)])
-        //     ->get();
-
-        // return response()->json($results);
 
 
 
@@ -438,34 +444,52 @@ class TombController extends Controller
 
 
     }
+        */
 
 
+
+        public function searchTombApi(Request $request)
+{
+    $keyWord = $request->keyWord;
+
+    // Normalize Arabic characters for matching
+    $normalizedKey = $this->normalizeArabic($keyWord);
+
+    $results = Tomb::whereRaw("REPLACE(REPLACE(REPLACE(LOWER(Name), 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا') LIKE ?", ['%' . $normalizedKey . '%'])
+        ->orderByRaw("CASE
+                        WHEN LOWER(SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(Name, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), ' ', 1)) = ?
+                        THEN 0
+                        ELSE 1
+                     END", [$normalizedKey])
+        ->get();
+
+    // Sort results by most recent DeathDate
+    $sortedResults = $results->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {
+            // Invalid format
+        }
+
+        return 0;
+    })->values(); // Reindex the collection
+
+    return response()->json($sortedResults);
+}
+
+
+
+
+/*
 
     public function searchTombByPlaceApi(Request $request)
     {
-        // $keyWord = $request->keyWord;
-
-        // // Use 'LIKE' for partial matching
-        // $getSearchResult = Tomb::where('Name', 'LIKE', '%' . $keyWord . '%')->get();
-
-        // // Return the result as JSON
-        // return response()->json($getSearchResult);
-
-
-
-
-
-        // $keyWord = $request->keyWord;
-
-        // $results = Tomb::where('Name', 'LIKE', '%' . $keyWord . '%')
-        //     ->orderByRaw("CASE
-        //                     WHEN LOWER(SUBSTRING_INDEX(Name, ' ', 1)) = ? THEN 0
-        //                     ELSE 1
-        //                  END", [strtolower($keyWord)])
-        //     ->get();
-
-        // return response()->json($results);
-
 
 
         $keyWord = $request->keyWord;
@@ -494,60 +518,49 @@ class TombController extends Controller
 
 
     }
+        */
+
+        public function searchTombByPlaceApi(Request $request)
+{
+    $keyWord = $request->keyWord;
+
+    // Normalize Arabic characters for matching
+    $normalizedKey = $this->normalizeArabic($keyWord);
+
+    $results = Tomb::whereRaw("REPLACE(REPLACE(REPLACE(LOWER(TombPlace), 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا') LIKE ?", ['%' . $normalizedKey . '%'])
+        ->orderByRaw("CASE
+                        WHEN LOWER(SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(Name, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), ' ', 1)) = ?
+                        THEN 0
+                        ELSE 1
+                     END", [$normalizedKey])
+        ->get();
+
+    // Sort results by most recent DeathDate
+    $sortedResults = $results->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {
+            // Ignore invalid formats
+        }
+
+        return 0;
+    })->values(); // Reindex collection
+
+    return response()->json($sortedResults);
+}
 
 
+
+/*
     public function searchTombByBlockApi(Request $request)
     {
-        // $keyWord = $request->keyWord;
 
-        // // Use 'LIKE' for partial matching
-        // $getSearchResult = Tomb::where('Name', 'LIKE', '%' . $keyWord . '%')->get();
-
-        // // Return the result as JSON
-        // return response()->json($getSearchResult);
-
-
-
-
-
-        // $keyWord = $request->keyWord;
-
-        // $results = Tomb::where('Name', 'LIKE', '%' . $keyWord . '%')
-        //     ->orderByRaw("CASE
-        //                     WHEN LOWER(SUBSTRING_INDEX(Name, ' ', 1)) = ? THEN 0
-        //                     ELSE 1
-        //                  END", [strtolower($keyWord)])
-        //     ->get();
-
-        // return response()->json($results);
-
-
-
-
-        /*
-        $keyWord = $request->keyWord;
-
-        // Normalize Arabic characters for matching
-        $normalizedKey = $this->normalizeArabic($keyWord);
-
-
-
-
-
-
-        $results = Tomb::whereRaw("REPLACE(REPLACE(REPLACE(LOWER(BlockNumber), 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا') LIKE ?", ['%' . $normalizedKey . '%'])
-            ->orderByRaw("CASE
-                            WHEN LOWER(SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(Name, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), ' ', 1)) = ?
-                            THEN 0
-                            ELSE 1
-                         END", [$normalizedKey])
-            ->get();
-
-
-
-        return response()->json($results);
-
-*/
 
 
 
@@ -559,6 +572,34 @@ class TombController extends Controller
 
 
     }
+        */
+
+        public function searchTombByBlockApi(Request $request)
+{
+    $keyWord = $request->keyWord;
+
+    $results = Tomb::where('BlockNumber', $keyWord)->get();
+
+    // Sort results by most recent DeathDate
+    $sortedResults = $results->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {
+            // Invalid date format
+        }
+
+        return 0;
+    })->values(); // Reindex collection
+
+    return response()->json($sortedResults);
+}
+
 
     // Helper function to normalize Arabic letters
 private function normalizeArabic($text)
