@@ -50,8 +50,8 @@
 
                             <div class="row mb-3">
                                 <div  style="cursor: pointer;"  onclick="showQrModal(this.innerHTML, 'qr_{{ $block->id }}')" class="col-sm-12 text-center">
+                                {!! QrCode::size(100)->generate("https://maraqed.com/admin/public/tomb/" . $block->id) !!}
 
-                                {!! QrCode::size(100)->generate($block->id) !!}
                             </div>
                         </div>
                             <!-- First Name -->
