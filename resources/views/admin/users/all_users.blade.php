@@ -73,7 +73,7 @@
 <td>
     <img onclick="showImageModal(this.src)"
          class="rounded-circle img-fluid"
-         src="{{ (!empty($item->Photo)) ? url('users/'.$item->Photo):url('user.png') }}"
+         src="{{ (!empty($item->Photo) || $item->Photo == "non" ) ? url('users/'.$item->Photo):url('user.png') }}"
          style="width: 50px; height:50px; border: 2px solid #0aa2dd; cursor: pointer;">
 </td>
 

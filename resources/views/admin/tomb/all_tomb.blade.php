@@ -74,7 +74,7 @@
 <td>{{ $item->DeathDate ? $item->DeathDate : 'لم يتم التحديد' }}
     <br>
       @if ($item->DeathDate)
-        {{ Carbon::parse($item->DeathDate)->diffForHumans() }} 
+        {{ Carbon::parse($item->DeathDate)->diffForHumans() }} تقريبا
     @else
         لم يتم التحديد
     @endif
