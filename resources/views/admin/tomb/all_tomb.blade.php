@@ -1,6 +1,8 @@
 @extends('admin.master_admin')
 @section('admin')
-
+@php
+    use Carbon\Carbon;
+@endphp
 <!--breadcrumb-->
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
     <div class="breadcrumb-title pe-3">كل المقابر</div>
@@ -68,7 +70,17 @@
         {!! QrCode::size(60)->generate($item->id) !!}
     </div>
 </td> --}}
-<td>{{ $item->DeathDate ? $item->DeathDate : 'لم يتم التحديد' }}</td>
+
+<td>{{ $item->DeathDate ? $item->DeathDate : 'لم يتم التحديد' }}
+    <br>
+      @if ($item->DeathDate)
+        {{ Carbon::parse($item->DeathDate)->diffForHumans() }} 
+    @else
+        لم يتم التحديد
+    @endif
+
+
+</td>
 
 <td>{{ $item->TombPlace }}</td>
 
