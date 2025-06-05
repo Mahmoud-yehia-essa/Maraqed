@@ -56,7 +56,7 @@
 <tbody>
 @foreach($tombs as $key => $item)
 <tr>
-<td> {{ $key+1 }} </td>
+<td> {{ $key+1 }}</td>
 <td>{{ $item->Name }}</td>
 <td>{{ $item->BirtDate }}</td>
 <td>{{ $item->birthDateFull }}</td>
