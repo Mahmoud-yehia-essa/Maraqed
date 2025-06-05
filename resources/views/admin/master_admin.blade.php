@@ -42,7 +42,7 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
 
-	<title>لوحة تحكم وادارة- - تطبيق مراقد</title>
+	<title>*لوحة تحكم وادارة- *تطبيق مراقد</title>
     <style>
 
 		body
