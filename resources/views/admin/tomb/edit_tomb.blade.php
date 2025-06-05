@@ -22,6 +22,20 @@
     } catch (\Exception $e) {
         $formattedDate = $tomb->DeathDate; // fallback if parsing fails
     }
+
+     $originalBirth = $tomb->birthDateFull;
+    try {
+        // Try parsing m/d/Y
+        $formattedBirth = \Carbon\Carbon::createFromFormat('m/d/Y', $originalBirth)->format('Y-m-d');
+    } catch (\Exception $e) {
+        try {
+            // Try parsing Y-m-d
+            $formattedBirth = \Carbon\Carbon::createFromFormat('Y-m-d', $originalBirth)->format('Y-m-d');
+        } catch (\Exception $e) {
+            // Fallback: maybe it's already a valid Y-m-d string or invalid
+            $formattedBirth = $originalBirth;
+        }
+    }
 @endphp
 <div class="container">
     <div class="main-body">
@@ -73,6 +87,16 @@
                             </div>
 
 
+
+                                 <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">تاريخ الميلاد</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input name="birthDateFull" type="date" class="form-control" value="{{ old('birthDateFull', $formattedBirth) }}" />
+                                    @error('birthDateFull') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
 
                             <!-- Last Name -->
                             <div class="row mb-3">

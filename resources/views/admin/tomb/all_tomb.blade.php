@@ -39,6 +39,8 @@
 <th>اسم المرحوم</th>
 <th>العمر</th>
 {{-- <th>الوصول السريع</th> --}}
+<th>تاريخ الميلاد</th>
+
 <th>تاريخ الوفاة</th>
     <th>مكان الدفن</th>
                 <th>القطعة</th>
@@ -54,9 +56,10 @@
 <tbody>
 @foreach($tombs as $key => $item)
 <tr>
-<td> {{ $key+1 }} </td>
+<td> {{ $key+1 }}</td>
 <td>{{ $item->Name }}</td>
 <td>{{ $item->BirtDate }}</td>
+<td>{{ $item->birthDateFull }}</td>
 
 
 
@@ -128,6 +131,8 @@
     <th>اسم المرحوم</th>
     <th>العمر</th>
     {{-- <th>الوصول السريع</th> --}}
+    <th>تاريخ الميلاد</th>
+
     <th>تاريخ الوفاة</th>
 
         <th>مكان الدفن</th>

@@ -47,7 +47,7 @@ class TombController extends Controller
 }
     */
 /////
-
+/*
 public function allTomb()
 {
     $tombs = Tomb::all()->sortByDesc(function ($tomb) {
@@ -82,6 +82,103 @@ public function allTomb()
 
     return view('admin.tomb.all_tomb', compact('tombs'));
 }
+    */
+
+
+
+    /* good
+    public function allTomb()
+{
+    $tombs = Tomb::all()->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                // Assuming DeathDate is in d/m/Y format
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {}
+
+        return 0;
+    })->values();
+
+    foreach ($tombs as $tomb) {
+        // Format DeathDate to Y-m-d
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->DeathDate)) {
+                $tomb->DeathDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate)->format('Y-m-d');
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->DeathDate)) {
+                $tomb->DeathDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->DeathDate)->format('Y-m-d');
+            }
+        } catch (\Exception $e) {
+            $tomb->DeathDate = null;
+        }
+
+        // Format birthDateFull to m/d/Y (correct interpretation of your data)
+        try {
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->birthDateFull)) {
+                $tomb->birthDateFull = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->birthDateFull)->format('m/d/Y');
+            } elseif (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->birthDateFull)) {
+                // This is m/d/Y (e.g. 10/19/1986), so parse accordingly
+                $tomb->birthDateFull = \Carbon\Carbon::createFromFormat('m/d/Y', $tomb->birthDateFull)->format('m/d/Y');
+            }
+        } catch (\Exception $e) {
+            $tomb->birthDateFull = null;
+        }
+    }
+
+    return view('admin.tomb.all_tomb', compact('tombs'));
+}
+
+
+*/
+
+public function allTomb()
+{
+    $tombs = Tomb::all()->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {}
+
+        return 0;
+    })->values();
+
+    foreach ($tombs as $tomb) {
+        // Format DeathDate to Y-m-d
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->DeathDate)) {
+                $tomb->DeathDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate)->format('Y-m-d');
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->DeathDate)) {
+                $tomb->DeathDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->DeathDate)->format('Y-m-d');
+            }
+        } catch (\Exception $e) {
+            $tomb->DeathDate = null;
+        }
+
+        // Format birthDateFull to Y-m-d
+        try {
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->birthDateFull)) {
+                $tomb->birthDateFull = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->birthDateFull)->format('Y-m-d');
+            } elseif (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->birthDateFull)) {
+                // Parse as m/d/Y and convert to Y-m-d
+                $tomb->birthDateFull = \Carbon\Carbon::createFromFormat('m/d/Y', $tomb->birthDateFull)->format('Y-m-d');
+            }
+        } catch (\Exception $e) {
+            $tomb->birthDateFull = null;
+        }
+    }
+
+    return view('admin.tomb.all_tomb', compact('tombs'));
+}
+
 
 
     public function addTomb()
@@ -178,6 +275,9 @@ public function allTomb()
             'DeathDate' => $request->DeathDate,
 
             'BirtDate' => $request->BirtDate,
+            'birthDateFull' => $request->birthDateFull,
+
+
             'Vertical' => $request->Vertical,
                         'BlockNumber' => $request->BlockNumber,
 
@@ -352,6 +452,9 @@ public function allTomb()
         $tomb->Name = $request->Name;
         $tomb->DeathDate = $request->DeathDate;
         $tomb->BirtDate = $request->BirtDate;
+
+                $tomb->birthDateFull = $request->birthDateFull;
+
         $tomb->Vertical = $request->Vertical;
         $tomb->Horizontal = $request->Horizontal;
                 $tomb->BlockNumber = $request->BlockNumber;
