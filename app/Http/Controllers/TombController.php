@@ -628,6 +628,8 @@ public function allTomb()
 }
     */
 
+
+    /* last one
     public function searchTombApi(Request $request)
 {
     $keyWord = $request->keyWord;
@@ -673,6 +675,73 @@ public function allTomb()
 
     return response()->json($sortedResults);
 }
+
+*/
+
+public function searchTombApi(Request $request)
+{
+    $keyWord = $request->keyWord;
+
+    // Normalize Arabic characters for matching
+    $normalizedKey = $this->normalizeArabic($keyWord);
+
+    $results = Tomb::whereRaw("REPLACE(REPLACE(REPLACE(LOWER(Name), 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا') LIKE ?", ['%' . $normalizedKey . '%'])
+        ->orderByRaw("CASE
+                        WHEN LOWER(SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(Name, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), ' ', 1)) = ?
+                        THEN 0
+                        ELSE 1
+                     END", [$normalizedKey])
+        ->get();
+
+    // Sort by DeathDate descending
+    $sortedResults = $results->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {}
+
+        return 0;
+    })->values();
+
+    // Format DeathDate and birthDateFull
+    foreach ($sortedResults as $tomb) {
+        // Format DeathDate
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->DeathDate)) {
+                $tomb->DeathDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate)->format('Y-m-d');
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->DeathDate)) {
+                $tomb->DeathDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->DeathDate)->format('Y-m-d');
+            }
+        } catch (\Exception $e) {
+            $tomb->DeathDate = null;
+        }
+
+        // Parse and reformat birthDateFull
+        $formattedBirthDate = null;
+        try {
+            if (!empty($tomb->birthDateFull)) {
+                if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->birthDateFull)) {
+                    $formattedBirthDate = \Carbon\Carbon::createFromFormat('m/d/Y', $tomb->birthDateFull)->format('Y-m-d');
+                } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->birthDateFull)) {
+                    $formattedBirthDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->birthDateFull)->format('Y-m-d');
+                }
+            }
+        } catch (\Exception $e) {
+            $formattedBirthDate = null;
+        }
+
+        $tomb->birthDateFull = $formattedBirthDate;
+    }
+
+    return response()->json($sortedResults);
+}
+
+
 
 
 
@@ -752,6 +821,7 @@ public function allTomb()
 
 */
 
+/*
 public function searchTombByPlaceApi(Request $request)
 {
     $keyWord = $request->keyWord;
@@ -805,6 +875,79 @@ public function searchTombByPlaceApi(Request $request)
 
     return response()->json($sortedResults);
 }
+    */
+
+
+    public function searchTombByPlaceApi(Request $request)
+{
+    $keyWord = $request->keyWord;
+
+    // Normalize Arabic characters for matching
+    $normalizedKey = $this->normalizeArabic($keyWord);
+
+    $results = Tomb::whereRaw("REPLACE(REPLACE(REPLACE(LOWER(TombPlace), 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا') LIKE ?", ['%' . $normalizedKey . '%'])
+        ->orderByRaw("CASE
+                        WHEN LOWER(SUBSTRING_INDEX(REPLACE(REPLACE(REPLACE(Name, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), ' ', 1)) = ?
+                        THEN 0
+                        ELSE 1
+                     END", [$normalizedKey])
+        ->get();
+
+    // Sort results by most recent DeathDate
+    $sortedResults = $results->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {}
+
+        return 0;
+    })->values(); // Reindex collection
+
+    \Carbon\Carbon::setLocale('ar'); // Set Arabic for human date
+
+    foreach ($sortedResults as $tomb) {
+        // Format DeathDate and DeathDateHuman
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->DeathDate)) {
+                $carbonDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate);
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->DeathDate)) {
+                $carbonDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->DeathDate);
+            }
+
+            if (isset($carbonDate)) {
+                $tomb->DeathDate = $carbonDate->format('Y-m-d');
+                $tomb->DeathDateHuman = $carbonDate->diffForHumans();
+            }
+        } catch (\Exception $e) {
+            $tomb->DeathDate = null;
+            $tomb->DeathDateHuman = null;
+        }
+
+        // Format birthDateFull to Y-m-d
+        $formattedBirthDate = null;
+        try {
+            if (!empty($tomb->birthDateFull)) {
+                if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->birthDateFull)) {
+                    $formattedBirthDate = \Carbon\Carbon::createFromFormat('m/d/Y', $tomb->birthDateFull)->format('Y-m-d');
+                } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->birthDateFull)) {
+                    $formattedBirthDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->birthDateFull)->format('Y-m-d');
+                }
+            }
+        } catch (\Exception $e) {
+            $formattedBirthDate = null;
+        }
+
+        $tomb->birthDateFull = $formattedBirthDate;
+    }
+
+    return response()->json($sortedResults);
+}
+
 
 
 
@@ -857,6 +1000,7 @@ public function searchTombByPlaceApi(Request $request)
 
 /////
 
+/*
 public function searchTombByBlockApi(Request $request)
 {
     $keyWord = $request->keyWord;
@@ -903,6 +1047,71 @@ public function searchTombByBlockApi(Request $request)
 
     return response()->json($sortedResults);
 }
+    */
+
+    public function searchTombByBlockApi(Request $request)
+{
+    $keyWord = $request->keyWord;
+
+    $results = Tomb::where('BlockNumber', $keyWord)->get();
+
+    // Sort results by most recent DeathDate
+    $sortedResults = $results->sortByDesc(function ($tomb) {
+        $date = $tomb->DeathDate;
+
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('d/m/Y', $date)->timestamp;
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->timestamp;
+            }
+        } catch (\Exception $e) {
+            // Invalid date
+        }
+
+        return 0;
+    })->values(); // Reindex collection
+
+    \Carbon\Carbon::setLocale('ar'); // Set Arabic for human-readable time
+
+    foreach ($sortedResults as $tomb) {
+        // Format DeathDate and DeathDateHuman
+        try {
+            if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->DeathDate)) {
+                $carbonDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate);
+            } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->DeathDate)) {
+                $carbonDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->DeathDate);
+            }
+
+            if (isset($carbonDate)) {
+                $tomb->DeathDate = $carbonDate->format('Y-m-d');
+                $tomb->DeathDateHuman = $carbonDate->diffForHumans();
+            }
+        } catch (\Exception $e) {
+            $tomb->DeathDate = null;
+            $tomb->DeathDateHuman = null;
+        }
+
+        // Format birthDateFull to Y-m-d
+        $formattedBirthDate = null;
+        try {
+            if (!empty($tomb->birthDateFull)) {
+                if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->birthDateFull)) {
+                    $formattedBirthDate = \Carbon\Carbon::createFromFormat('m/d/Y', $tomb->birthDateFull)->format('Y-m-d');
+                } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->birthDateFull)) {
+                    $formattedBirthDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->birthDateFull)->format('Y-m-d');
+                }
+            }
+        } catch (\Exception $e) {
+            $formattedBirthDate = null;
+        }
+
+        $tomb->birthDateFull = $formattedBirthDate;
+    }
+
+    return response()->json($sortedResults);
+}
+
 
 
     // Helper function to normalize Arabic letters
@@ -947,7 +1156,7 @@ public function searchTombByDateApi(Request $request)
     $keyWord = $request->keyWord;
     $limit = (int) $request->limit; // default is 0 if not set
 
-    // Get all records first
+    // Get all re   cords first
     $results = Tomb::all()->map(function ($item) use ($keyWord) {
         // Mark valid if exact match
         $item->valid = ($item->DeathDate === $keyWord);
