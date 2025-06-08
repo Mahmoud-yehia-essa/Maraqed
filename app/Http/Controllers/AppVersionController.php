@@ -45,6 +45,9 @@ class AppVersionController extends Controller
             'ios' => $request->ios,
             'android' => $request->android,
             'des' => $request->des,
+                        'app_type' => $request->app_type,
+            'update_required' => $request->update_required,
+
         ]
     );
     $notification = array(
@@ -59,4 +62,23 @@ class AppVersionController extends Controller
 
 
     }
+
+
+
+     /// Api
+
+
+
+
+
+
+    public function getSettingApp($id)
+    {
+
+        $version = AppVersion::where('id', $id)->get()->first();
+
+    return response()->json($version);
+    }
+
+
 }

@@ -79,6 +79,57 @@
                     </div>
                 </div>
 
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">التحديث في التطبيق الزامي ؟</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+
+
+                        <select  name="update_required" class="form-select" aria-label="Default select example">
+
+
+
+                            <option value="yes" {{ old('update_required',$appVersion->update_required) == 'yes' ? 'selected' : '' }} >نعم</option>
+
+                            <option value="no" {{ old('update_required',$appVersion->update_required) == 'no' ? 'selected' : '' }} >لا</option>
+
+
+
+
+                        </select>
+
+                        @error('update_required') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">هل تسجيل الدخول الزامي؟</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+
+
+                        <select  name="app_type" class="form-select" aria-label="Default select example">
+
+
+
+                            <option value="yes" {{ old('app_type',$appVersion->app_type) == 'yes' ? 'selected' : '' }} >نعم</option>
+
+                            <option value="no" {{ old('app_type',$appVersion->app_type) == 'no' ? 'selected' : '' }} >لا</option>
+
+
+
+
+                        </select>
+
+                        @error('app_type') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-9 text-secondary">

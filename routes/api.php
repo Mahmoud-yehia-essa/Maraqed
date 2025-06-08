@@ -6,6 +6,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\TombController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlockController;
+use App\Http\Controllers\AppVersionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -70,6 +71,9 @@ Route::post('/edit/tomb',[TombController::class,'editTombApi']);
 
 
 Route::post('/upload-image-update/{id}',[TombController::class,'uploadUpadteImageApi']);
+
+Route::get('/setting/app/{id}',[AppVersionController::class,'getSettingApp']);
+
 
 
 // addTombApi
