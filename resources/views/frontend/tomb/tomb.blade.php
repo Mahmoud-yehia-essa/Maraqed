@@ -16,7 +16,7 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Tajawal', sans-serif;
+            font-family: "Cairo", sans-serif;
             font-size: 1.15rem;
         }
         .card {
@@ -38,12 +38,6 @@
             border-top: 1px solid #dee2e6;
             margin: 1rem 0;
         }
-        body
-		{
-			font-family: "Cairo", sans-serif;
-		}
-
-
     </style>
 </head>
 <body>
@@ -53,19 +47,16 @@
 
     <div class="card p-4">
         @php
-            $formattedDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate)->format('Y-m-d');
             $fields = [
                 'الاسم' => $tomb->Name,
-                'العمر' => $tomb->BirtDate,
-                'تاريخ الوفاة' => $formattedDate,
+                'تاريخ الميلاد' => $tomb->birthDateFull,
+                'تاريخ الوفاة' => $tomb->DeathDate,
+                                'العمر' => $tomb->BirtDate,
+
                 'مكان الدفن' => $tomb->TombPlace,
                 'القطعة' => $tomb->BlockNumber,
-
                 'لاين' => $tomb->Vertical,
-                // 'أفقي' => $tomb->Horizontal,
                 'رقم القبر' => $tomb->TombNumber,
-                // 'خط العرض (Latitude)' => $tomb->Latitude,
-                // 'خط الطول (Longitude)' => $tomb->Longitude,
             ];
         @endphp
 
@@ -80,7 +71,12 @@
         <div class="row mb-4">
             <div class="col-sm-4 info-label">الصورة:</div>
             <div class="col-sm-8">
-                <img onclick="showImageModal(this.src)"  src="{{ (!empty($tomb->Photo2)) ? url('photos2/'.$tomb->Photo2):url('no_image.jpg') }}" alt="الصورة" class="img-thumbnail" width="150"  style=" cursor: pointer;">
+                <img onclick="showImageModal(this.src)"
+                     src="{{ !empty($tomb->Photo2) ? url('photos2/'.$tomb->Photo2) : url('no_image.jpg') }}"
+                     alt="الصورة"
+                     class="img-thumbnail"
+                     width="150"
+                     style="cursor: pointer;">
             </div>
         </div>
         <div class="divider"></div>
@@ -88,14 +84,17 @@
         <div class="row mb-4">
             <div class="col-sm-4 info-label">الشاهد:</div>
             <div class="col-sm-8">
-
-
-                <img   onclick="showImageModal(this.src)" src="{{ (!empty($tomb->DeathPhoto)) ? url('death_photos/'.$tomb->DeathPhoto):url('no_image.jpg') }}" alt="شهادة الوفاة" class="img-thumbnail" width="150"  style=" cursor: pointer;">
+                <img onclick="showImageModal(this.src)"
+                     src="{{ !empty($tomb->DeathPhoto) ? url('death_photos/'.$tomb->DeathPhoto) : url('no_image.jpg') }}"
+                     alt="شهادة الوفاة"
+                     class="img-thumbnail"
+                     width="150"
+                     style="cursor: pointer;">
             </div>
         </div>
         <div class="divider"></div>
 
-        @if ($tomb->Latitude && $tomb->Longitude &&  $tomb->Longitude != '0.0' &&  $tomb->Latitude != '0.0' &&  $tomb->Longitude != '' &&  $tomb->Latitude != '' )
+        @if ($tomb->Latitude && $tomb->Longitude && $tomb->Latitude != '0.0' && $tomb->Longitude != '0.0')
             <div class="row mb-3">
                 <div class="col-sm-12">
                     <div id="map"></div>
@@ -103,7 +102,9 @@
             </div>
 
             <div class="text-center mt-3">
-                <a id="directionLink" class="btn btn-outline-primary" target="_blank">📍 الانتقال إلى الموقع على الخريطة</a>
+                <a id="directionLink" class="btn btn-outline-primary" target="_blank">
+                    📍 الانتقال إلى الموقع على الخريطة
+                </a>
             </div>
         @endif
     </div>
@@ -131,37 +132,32 @@
         }
     });
 </script>
+
+<!-- Image Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content position-relative bg-transparent border-0">
-
-        <!-- Rectangular Close Button -->
-        <button type="button"
-                class="btn text-white"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                style="
-                  position: absolute;
-                  top: 15px;
-                  right: 15px;
-                  background-color: black;
-                  font-size: 30px;
-                  padding: 1px 10px;
-                  border-radius: 8px;
-                  z-index: 1055;
-                ">
-            &times;
-        </button>
-
-        <!-- Image -->
-        <img id="modalImage" src="" class="img-fluid rounded shadow" alt="image">
-      </div>
+        <div class="modal-content position-relative bg-transparent border-0">
+            <button type="button"
+                    class="btn text-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    style="
+                        position: absolute;
+                        top: 15px;
+                        right: 15px;
+                        background-color: black;
+                        font-size: 30px;
+                        padding: 1px 10px;
+                        border-radius: 8px;
+                        z-index: 1055;">
+                &times;
+            </button>
+            <img id="modalImage" src="" class="img-fluid rounded shadow" alt="image">
+        </div>
     </div>
-  </div>
+</div>
 
-
-
-  <script>
+<script>
     function showImageModal(src) {
         document.getElementById('modalImage').src = src;
         var myModal = new bootstrap.Modal(document.getElementById('imageModal'));

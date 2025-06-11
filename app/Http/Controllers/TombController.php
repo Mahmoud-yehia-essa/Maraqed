@@ -526,13 +526,47 @@ public function allTomb()
 
 
 
+    /*
+
     public function showFrontEndTomb($id)
     {
 
         $tomb = Tomb::findOrFail($id);
+        // return "mm";
 
         return view('frontend.tomb.tomb',compact('tomb'));
     }
+        */
+
+        public function showFrontEndTomb($id)
+{
+    $tomb = Tomb::findOrFail($id);
+
+    // Format DeathDate to Y-m-d
+    try {
+        if (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->DeathDate)) {
+            $tomb->DeathDate = \Carbon\Carbon::createFromFormat('d/m/Y', $tomb->DeathDate)->format('Y-m-d');
+        } elseif (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->DeathDate)) {
+            $tomb->DeathDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->DeathDate)->format('Y-m-d');
+        }
+    } catch (\Exception $e) {
+        $tomb->DeathDate = null;
+    }
+
+    // Format birthDateFull to Y-m-d
+    try {
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $tomb->birthDateFull)) {
+            $tomb->birthDateFull = \Carbon\Carbon::createFromFormat('Y-m-d', $tomb->birthDateFull)->format('Y-m-d');
+        } elseif (preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $tomb->birthDateFull)) {
+            $tomb->birthDateFull = \Carbon\Carbon::createFromFormat('m/d/Y', $tomb->birthDateFull)->format('Y-m-d');
+        }
+    } catch (\Exception $e) {
+        $tomb->birthDateFull = null;
+    }
+
+    return view('frontend.tomb.tomb', compact('tomb'));
+}
+
 
 
     public function tombInactive($id){
