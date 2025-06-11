@@ -42,6 +42,17 @@
 </head>
 <body>
 
+    <div class="text-center mt-5">
+    <h4 class="mb-3">حمّل تطبيق <span class="text-primary">مراقد</span> على هاتفك</h4>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="https://play.google.com/store/apps/details?id=com.maraqed.app" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Download on Google Play" style="height:60px;">
+        </a>
+        <a href="https://apps.apple.com/us/app/maraqed/id6746356557" target="_blank">
+            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height:60px;">
+        </a>
+    </div>
+</div>
 <div class="container py-5">
     <h2 class="mb-4 text-center text-primary">معلومات عن المقبرة</h2>
 
@@ -108,6 +119,18 @@
             </div>
         @endif
     </div>
+
+<div class="text-center mt-5">
+    <h4 class="mb-3">حمّل تطبيق <span class="text-primary">مراقد</span> على هاتفك</h4>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="https://play.google.com/store/apps/details?id=com.maraqed.app" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Download on Google Play" style="height:60px;">
+        </a>
+        <a href="https://apps.apple.com/us/app/maraqed/id6746356557" target="_blank">
+            <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store" style="height:60px;">
+        </a>
+    </div>
+</div>
 </div>
 
 <!-- Scripts -->
