@@ -54,7 +54,7 @@
     </div>
 </div>
 <div class="container py-5">
-    <h2 class="mb-4 text-center text-primary">معلومات عن المقبرة</h2>
+    <h2 class="mb-4 text-center text-primary">معلومات عن القبر</h2>
 
     <div class="card p-4">
         @php
